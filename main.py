@@ -1,5 +1,6 @@
 import numpy as np
 import hashlib
+from collections import defaultdict
 
 class Graphe3Coloriable:
     size: int
@@ -12,8 +13,10 @@ class Graphe3Coloriable:
         self.random_colors()
         self.random_adjacency()
 
+
     def random_colors(self):
         self.colors = np.random.randint(0, 3, self.size)
+
 
     def random_adjacency(self):
         self.matrix = np.zeros((self.size, self.size))
@@ -69,7 +72,7 @@ def miseEnGageColoriage(couleurs, rand_array):
 
 
 def preuveColoriage(matrice, coloriage, i, j, ri, ci, rj, cj):
-    return salt_hash(ci, ri) == coloriage[i] and salt_hash(cj, rj) == coloriage[j]
+    return salt_hash(ci, ri) == coloriage[i] and salt_hash(cj, rj) == coloriage[j] and ci != cj
 
 
 def genererGraphe3Coloriable():
@@ -103,7 +106,7 @@ class Utilisateur:
 
 class Verificateur:
     misesEnGage = {}
-    success = {}
+    success = defaultdict(int)
 
     def __init__(self, graphe):
         self.graphe = graphe
@@ -115,7 +118,7 @@ class Verificateur:
         return utilisateur.donnerCouleurs(i, j)
 
     def verifierMiseEnGage(self, utilisateur, i, j, reponse):
-        success[utilisateur] += 1
+        self.success[utilisateur] += 1
         return preuveColoriage(self.graphe.matrix, self.misesEnGage[utilisateur], i, j, *reponse)
 
 
